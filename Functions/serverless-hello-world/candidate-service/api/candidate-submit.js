@@ -3,6 +3,7 @@
 /* eslint-disable no-console */
 const uuid = require('uuid');
 const AWS = require('aws-sdk');
+const parameterStoreManager = require('./shared/aws-parameter-store-manager');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -31,8 +32,10 @@ module.exports.execute = async (event) => {
 
   console.log('Submitting candidate');
 
+  const tableName = await parameterStoreManager.getParameter('dynamodb/candidates');
+
   const candidateInfoParams = {
-    TableName: process.env.CANDIDATE_TABLE,
+    TableName: tableName,
     Item: candidateInfo(fullnameRequest, emailRequest, experienceRequest),
   };
 

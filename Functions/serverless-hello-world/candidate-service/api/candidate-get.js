@@ -2,14 +2,17 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 const AWS = require('aws-sdk');
+const parameterStoreManager = require('./shared/aws-parameter-store-manager');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.execute = async (event) => {
   console.log('Retrieving candidate details.');
 
+  const tableName = await parameterStoreManager.getParameter('dynamodb/candidates');
+
   const params = {
-    TableName: process.env.CANDIDATE_TABLE,
+    TableName: tableName,
     Key: {
       id: event.pathParameters.id,
     },

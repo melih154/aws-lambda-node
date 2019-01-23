@@ -2,16 +2,21 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 const AWS = require('aws-sdk');
+const parameterStoreManager = require('./shared/aws-parameter-store-manager');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.execute = async () => {
+  console.log('Scanning Candidate table.');
+
+  const tableName = await parameterStoreManager.getParameter('dynamodb/candidates');
+
+  console.log(`Retrieved table name: ${tableName}`);
+
   const params = {
-    TableName: process.env.CANDIDATE_TABLE,
+    TableName: tableName,
     ProjectionExpression: 'id, fullname, email',
   };
-
-  console.log('Scanning Candidate table.');
 
   try {
     const res = await dynamoDb.scan(params).promise();
