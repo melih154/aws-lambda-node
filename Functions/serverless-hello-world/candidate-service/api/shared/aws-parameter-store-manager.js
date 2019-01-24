@@ -9,8 +9,6 @@ module.exports.getParameter = async (parameterPath) => {
     WithDecryption: false,
   };
 
-  console.log(parameterStoreRequestParams.Name);
-
   const parameterStoreResponse = await ssm.getParameter(parameterStoreRequestParams).promise();
   return parameterStoreResponse.Parameter.Value;
 };
